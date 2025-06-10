@@ -91,6 +91,3 @@ if breakdown:
     st.markdown(f"### 💰 Total Price: ${total_price}")
 else:
     st.write("No components selected")
-
-# & "C:/Users/Pedro Sanhueza/AppData/Local/Programs/Python/Python313/Scripts/streamlit.exe" run "C:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Andriy Koval/andriy.py"
-# & "C:/Users/Pedro Sanhueza/AppData/Local/Programs/Python/Python313/Scripts/streamlit.exe" run "c:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Andriy Koval/andriy.py"
