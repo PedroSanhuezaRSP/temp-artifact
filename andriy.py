@@ -5,27 +5,31 @@ st.title("Part Number Builder")
 
 # Dropdown options and codes
 series_options = {
-    "Alpha Series": "ALP",
-    "Beta Series": "BET",
-    "Gamma Series": "GAM"
+    "Select a Series...": {"code": "", "price": 0},
+    "Alpha Series": {"code": "ALP", "price": 100},
+    "Beta Series": {"code": "BET", "price": 150},
+    "Gamma Series": {"code": "GAM", "price": 200}
 }
 
 size_options = {
-    "Small": "S",
-    "Medium": "M",
-    "Large": "L"
+    "Select a Size...": {"code": "", "price": 0},
+    "Small": {"code": "S", "price": 50},
+    "Medium": {"code": "M", "price": 75},
+    "Large": {"code": "L", "price": 100}
 }
 
 material_options = {
-    "Aluminum": "AL",
-    "Steel": "ST",
-    "Plastic": "PL"
+    "Select a Material...": {"code": "", "price": 0},
+    "Aluminum": {"code": "AL", "price": 80},
+    "Steel": {"code": "ST", "price": 120},
+    "Plastic": {"code": "PL", "price": 40}
 }
 
 color_options = {
-    "Red": "R",
-    "Blue": "B",
-    "Black": "K"
+    "Select a Color...": {"code": "", "price": 0},
+    "Red": {"code": "R", "price": 25},
+    "Blue": {"code": "B", "price": 50},
+    "Black": {"code": "K", "price": 75}
 }
 
 # User selections
@@ -35,49 +39,58 @@ material = st.selectbox("Select Material", list(material_options.keys()))
 color = st.selectbox("Select Color", list(color_options.keys()))
 
 # Generate part number
-series_code = series_options[series]
-size_code = size_options[size]
-material_code = material_options[material]
-color_code = color_options[color]
+part_components = []
+total_price = 0
 
-part_number = f"{series_code}-{size_code}-{material_code}-{color_code}"
+# Only add components if a real option (not placeholder) is selected
+if series and series_options[series]["code"]:
+    series_code = series_options[series]["code"]
+    part_components.append(series_code)
+    total_price += series_options[series]["price"]
+    
+if size and size_options[size]["code"]:
+    size_code = size_options[size]["code"]
+    part_components.append(size_code)
+    total_price += size_options[size]["price"]
+    
+if material and material_options[material]["code"]:
+    material_code = material_options[material]["code"]
+    part_components.append(material_code)
+    total_price += material_options[material]["price"]
+    
+if color and color_options[color]["code"]:
+    color_code = color_options[color]["code"]
+    part_components.append(color_code)
+    total_price += color_options[color]["price"]
+
+part_number = "-".join(part_components) if part_components else "No options selected"
 
 st.markdown("### 🧩 Generated Part Number")
 st.code(part_number, language='text')
 
-# Breakdown dictionary for buyer clarity
-breakdown = {
-    "Series": f"{series_code} = {series}",
-    "Size": f"{size_code} = {size}",
-    "Material": f"{material_code} = {material}",
-    "Color": f"{color_code} = {color}",
-}
+# Breakdown dictionary with prices
+breakdown = {}
+if series and series_options[series]["code"]:
+    series_code = series_options[series]["code"]
+    breakdown["Series"] = f"{series_code} = {series} (${series_options[series]['price']})"
+if size and size_options[size]["code"]:
+    size_code = size_options[size]["code"]
+    breakdown["Size"] = f"{size_code} = {size} (${size_options[size]['price']})"
+if material and material_options[material]["code"]:
+    material_code = material_options[material]["code"]
+    breakdown["Material"] = f"{material_code} = {material} (${material_options[material]['price']})"
+if color and color_options[color]["code"]:
+    color_code = color_options[color]["code"]
+    breakdown["Color"] = f"{color_code} = {color} (${color_options[color]['price']})"
 
-# st.markdown("### 🔍 Part Number Breakdown")
-# st.json(breakdown)
-
-# Initialize part number history in session state
-if "part_dict" not in st.session_state:
-    st.session_state.part_dict = {}
-
-# Add button
-if st.button("➕ Add Part Number"):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    st.session_state.part_dict[timestamp] = {
-        "Part Number": part_number,
-        "Breakdown": breakdown
-    }
-    st.success("Part number added!")
-
-# Show dictionary of part numbers
-if st.session_state.part_dict:
-    st.markdown("### 📒 Part Number Dictionary (History)")
-    for time, info in st.session_state.part_dict.items():
-        st.markdown(f"**{time}**")
-        st.code(info["Part Number"])
-        st.json(info["Breakdown"])
-
-
+# Display breakdown and total price
+if breakdown:
+    st.markdown("### 📝 Part Breakdown")
+    for component, details in breakdown.items():
+        st.write(f"**{component}:** {details}")
+    st.markdown(f"### 💰 Total Price: ${total_price}")
+else:
+    st.write("No components selected")
 
 # & "C:/Users/Pedro Sanhueza/AppData/Local/Programs/Python/Python313/Scripts/streamlit.exe" run "C:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Andriy Koval/andriy.py"
 # & "C:/Users/Pedro Sanhueza/AppData/Local/Programs/Python/Python313/Scripts/streamlit.exe" run "c:/Users/Pedro Sanhueza/OneDrive - RSP Supply/Documents/Script/external projects/Andriy Koval/andriy.py"
